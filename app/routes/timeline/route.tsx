@@ -52,7 +52,7 @@ export default function TimelinePage() {
     <MaxWidthCenterLayout>
       <h1>Timeline</h1>
       <section style={{ display: "flex", justifyContent: "center" }}>
-        <Timeline.Container>
+        <Timeline.Container expand>
           {timeline.map((item) => (
             <Timeline.Item
               key={item.time}
@@ -61,12 +61,6 @@ export default function TimelinePage() {
               })}
               active={item.status === "success"}
             >
-              <span
-                style={{
-                  width: "30vw",
-                  display: "block",
-                }}
-              ></span>
               <div
                 style={{
                   display: "flex",
