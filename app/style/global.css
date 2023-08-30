@@ -1,0 +1,36 @@
+html {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+main {
+  margin: 1rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-green-500);
+}
+
+.dark {
+  background: var(--color-gray-800);
+  color: var(--color-gray-50);
+}
+
+.light {
+  background: var(--color-gray-100);
+  color: var(--color-gray-900);
+}

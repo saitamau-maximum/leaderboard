@@ -1,0 +1,50 @@
+.button {
+  --theme-toggle-icon-size: 1.5rem;
+  --theme-toggle-icon-padding: 0.5rem;
+  --theme-toggle-button-size: calc(
+    var(--theme-toggle-icon-size) + var(--theme-toggle-icon-padding) * 2
+  );
+  width: var(--theme-toggle-button-size);
+  height: var(--theme-toggle-button-size);
+  padding: var(--theme-toggle-icon-padding);
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+:global(.dark) .button:hover {
+  background: var(--color-gray-700);
+}
+
+:global(.light) .button:hover {
+  background: var(--color-gray-200);
+}
+
+.icon {
+  position: absolute;
+  inset: var(--theme-toggle-icon-padding);
+  width: var(--theme-toggle-icon-size);
+  height: var(--theme-toggle-icon-size);
+  transition: stroke 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.darkOnly {
+  opacity: 0;
+}
+
+:global(.dark) .darkOnly {
+  opacity: 1;
+  stroke: var(--color-gray-300);
+}
+
+.lightOnly {
+  opacity: 0;
+}
+
+:global(.light) .lightOnly {
+  opacity: 1;
+  stroke: var(--color-gray-700);
+}

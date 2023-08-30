@@ -1,0 +1,144 @@
+.header {
+  width: 100%;
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 0 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  height: 6rem;
+  transition: border 0.2s ease-in-out;
+}
+
+:global(.light) .header {
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+:global(.dark) .header {
+  border-bottom: 1px solid var(--color-gray-700);
+}
+
+.logo {
+  fill: var(--color-accent-gradient);
+  height: 4rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.5rem;
+}
+
+.navText {
+  --nav-text-padding-x: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem var(--nav-text-padding-x);
+
+  transition: color 0.2s ease-in-out;
+
+  position: relative;
+}
+
+:global(.light) .navText {
+  color: var(--color-gray-700);
+}
+
+:global(.dark) .navText {
+  color: var(--color-gray-300);
+}
+
+.currentNavText::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -0.25rem 0;
+  margin: auto;
+  width: 80%;
+  height: 0.125rem;
+  border-radius: 9999px;
+}
+
+:global(.light) .currentNavText::after {
+  background: var(--color-green-600);
+}
+
+:global(.dark) .currentNavText::after {
+  background: var(--color-green-500);
+}
+
+.notCurrentNavText {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+:global(.light) .navItem a:hover {
+  color: var(--color-green-600);
+}
+
+:global(.dark) .navItem a:hover {
+  color: var(--color-green-500);
+}
+
+.userDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.loginButton {
+  --login-icon-size: 1.5rem;
+  --login-icon-padding: 0.5rem;
+  --login-button-size: calc(
+    var(--login-icon-size) + var(--login-icon-padding) * 2
+  );
+  width: var(--login-button-size);
+  height: var(--login-button-size);
+  padding: var(--login-icon-padding);
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+:global(.dark) .loginButton:hover {
+  background: var(--color-gray-700);
+}
+
+:global(.light) .loginButton:hover {
+  background: var(--color-gray-200);
+}
+
+.loginIcon {
+  width: var(--login-icon-size);
+  height: var(--login-icon-size);
+  transition: stroke 0.2s ease-in-out;
+}
+
+:global(.dark) .loginIcon {
+  stroke: var(--color-gray-300);
+}
+
+:global(.light) .loginIcon {
+  stroke: var(--color-gray-700);
+}

@@ -1,0 +1,13 @@
+.anchor {
+  text-decoration: none;
+  transition: color 0.15s ease;
+  margin: 0 0.25rem;
+}
+
+:global(.light) .anchor {
+  color: var(--color-green-500);
+}
+
+:global(.dark) .anchor {
+  color: var(--color-green-400);
+}
