@@ -5,5 +5,7 @@ interface Env {
 }
 
 declare module "@remix-run/cloudflare" {
-  interface AppLoadContext extends Env {}
+  interface AppLoadContext {
+    env: Env;
+  }
 }
