@@ -6,6 +6,7 @@
     "build": "remix build",
     "dev": "remix dev --manual -c \"npm run start\"",
     "start": "wrangler pages dev --compatibility-date=2023-06-21 ./public",
+    "migrate": "drizzle-kit generate:sqlite --out migrations --schema app/db/schema.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "@remix-run/eslint-config": "^1.19.3",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
+    "better-sqlite3": "^8.5.2",
     "clsx": "^2.0.0",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.38.0",
