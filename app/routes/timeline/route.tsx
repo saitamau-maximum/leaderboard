@@ -36,6 +36,13 @@ export const loader = async ({ context }: LoaderArgs) => {
     };
   });
 
+  // Sort by submittedAt desc
+  const sortedReport = withTeamNameReports.sort((a, b) => {
+    return (
+      new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+    );
+  });
+
   return json({ reports: withTeamNameReports });
 };
 
