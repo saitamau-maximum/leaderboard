@@ -36,35 +36,27 @@ export const loader = async ({ context }: LoaderArgs) => {
     };
   });
 
-  const groupedReport = withTeamNameReports.reduce(
-    (acc, cur) => {
-      if (!acc[cur.teamId]) {
-        acc[cur.teamId] = [];
-      }
-      acc[cur.teamId].push(cur);
-      return acc;
-    },
-    {} as Record<
-      number,
-      {
-        id: number;
-        teamId: number;
-        competitionId: number;
-        score: number;
-        status: string;
-        submittedAt: string;
-        teamName: string;
-      }[]
-    >
-  );
-  const sortedReport = Object.entries(groupedReport).sort((a, b) => {
-    const aScore = a[1].reduce((acc, cur) => acc + cur.score, 0);
-    const bScore = b[1].reduce((acc, cur) => acc + cur.score, 0);
-    return bScore - aScore;
+  const sortedReport = withTeamNameReports.sort((a, b) => {
+    if (a.score > b.score) {
+      return -1;
+    }
+    if (a.score < b.score) {
+      return 1;
+    }
+    return 0;
   });
 
+  const groupedReports = sortedReport.reduce((acc, cur) => {
+    if (!acc[cur.teamId]) {
+      acc[cur.teamId] = [];
+    }
+    acc[cur.teamId].push(cur);
+    return acc;
+  }, {} as Record<string, typeof sortedReport>);
+  const reportsArray = Object.entries(groupedReports);
+
   return json({
-    reports: sortedReport,
+    reports: reportsArray,
   });
 };
 
@@ -78,4 +70,3 @@ export default function LeaderboardPage() {
     </MaxWidthCenterLayout>
   );
 }
-
