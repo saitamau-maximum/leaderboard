@@ -27,12 +27,11 @@ export const ScoreTable = ({ reports }: ScoreTableProps) => {
       </thead>
       <tbody>
         {reports.map(([teamId, reports], index) => {
-          const score = reports.reduce((acc, cur) => acc + cur.score, 0);
           return (
             <tr key={teamId}>
               <td>{index + 1}</td>
               <td>{reports[0].teamName}</td>
-              <td>{score}</td>
+              <td>{reports.slice(-1)[0].score}</td>
             </tr>
           );
         })}
