@@ -10,6 +10,7 @@ import { SITE_TITLE } from "~/constants/config";
 import { client } from "~/db/client.server";
 import { competitions, reports, teams } from "~/db/schema";
 import { ScoreTable } from "./scoreTable";
+import { TimeSeriesChart } from "./chart";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: `Leaderboard | ${SITE_TITLE}` }];
@@ -36,8 +37,14 @@ export const loader = async ({ context }: LoaderArgs) => {
     };
   });
 
+  const timeSortedReports = withTeamNameReports.sort((a, b) => {
+    return (
+      new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()
+    );
+  });
+
   return json({
-    reports: withTeamNameReports,
+    reports: timeSortedReports,
   });
 };
 
@@ -47,6 +54,7 @@ export default function LeaderboardPage() {
   return (
     <MaxWidthCenterLayout>
       <h1>Leaderboard</h1>
+      <TimeSeriesChart reports={data.reports} />
       <ScoreTable reports={data.reports} />
     </MaxWidthCenterLayout>
   );
