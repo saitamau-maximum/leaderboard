@@ -12,6 +12,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@cfworker/uuid": "^1.12.4",
     "@remix-run/cloudflare": "^1.19.3",
     "@remix-run/cloudflare-pages": "^1.19.3",
     "@remix-run/css-bundle": "^1.19.3",
@@ -21,7 +22,8 @@
     "drizzle-orm": "^0.28.5",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "valibot": "^0.13.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.19.0",
