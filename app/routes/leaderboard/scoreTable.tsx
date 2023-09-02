@@ -1,21 +1,36 @@
 import styles from "./scoreTable.module.css";
 
 interface ScoreTableProps {
-  reports: [
-    string,
-    {
-      id: number;
-      teamId: number;
-      competitionId: number;
-      score: number;
-      status: string;
-      submittedAt: string;
-      teamName: string;
-    }[]
-  ][];
+  reports: {
+    id: number;
+    teamId: number;
+    competitionId: number;
+    score: number;
+    status: string;
+    submittedAt: string;
+    teamName: string;
+  }[];
 }
 
 export const ScoreTable = ({ reports }: ScoreTableProps) => {
+  // best score of each team
+  const bestScoreOfEachTeam = reports.reduce((acc, cur) => {
+    const teamId = cur.teamId;
+    const score = cur.score;
+    if (acc[teamId] === undefined) {
+      acc[teamId] = {
+        teamName: cur.teamName,
+        score,
+      };
+    } else {
+      acc[teamId] = {
+        teamName: cur.teamName,
+        score: Math.max(acc[teamId].score, score),
+      };
+    }
+    return acc;
+  }, {} as Record<number, { teamName: string; score: number }>);
+
   return (
     <table className={styles.table}>
       <thead>
@@ -26,15 +41,15 @@ export const ScoreTable = ({ reports }: ScoreTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {reports.map(([teamId, reports], index) => {
-          return (
+        {Object.entries(bestScoreOfEachTeam)
+          .sort((a, b) => b[1].score - a[1].score)
+          .map(([teamId, { teamName, score }], index) => (
             <tr key={teamId}>
               <td>{index + 1}</td>
-              <td>{reports[0].teamName}</td>
-              <td>{reports.slice(-1)[0].score}</td>
+              <td>{teamName}</td>
+              <td>{score}点</td>
             </tr>
-          );
-        })}
+          ))}
       </tbody>
     </table>
   );

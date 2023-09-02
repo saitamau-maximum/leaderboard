@@ -36,30 +36,8 @@ export const loader = async ({ context }: LoaderArgs) => {
     };
   });
 
-  // Sort by submittedAt asc
-  const sortedReport = withTeamNameReports.sort((a, b) => {
-    return (
-      new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()
-    );
-  });
-
-  const groupedReports = sortedReport.reduce((acc, cur) => {
-    if (!acc[cur.teamId]) {
-      acc[cur.teamId] = [];
-    }
-    acc[cur.teamId].push(cur);
-    return acc;
-  }, {} as Record<string, typeof sortedReport>);
-
-  // Sort by score desc
-  const reportsArray = Object.entries(groupedReports).sort((a, b) => {
-    const aScore = a[1].slice(-1)[0].score;
-    const bScore = b[1].slice(-1)[0].score;
-    return bScore - aScore;
-  });
-
   return json({
-    reports: reportsArray,
+    reports: withTeamNameReports,
   });
 };
 
