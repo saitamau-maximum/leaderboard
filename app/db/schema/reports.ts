@@ -5,5 +5,6 @@ export const reports = sqliteTable("reports", {
   teamId: integer("teamId").notNull(),
   competitionId: integer("competitionId").notNull(),
   score: integer("score").notNull(),
+  status: text("status").notNull(),
   submittedAt: text("submittedAt").notNull(),
 });

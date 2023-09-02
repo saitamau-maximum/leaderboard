@@ -8,6 +8,13 @@
       "when": 1693612582392,
       "tag": "0000_special_black_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1693614897660,
+      "tag": "0001_late_champions",
+      "breakpoints": true
     }
   ]
 }
