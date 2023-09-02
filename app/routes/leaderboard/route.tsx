@@ -21,14 +21,14 @@ export const loader = async ({ context }: LoaderArgs) => {
     .from(competitions)
     .where(eq(competitions.isActive, 1));
 
-  const report = await client(context.env.DB)
+  const competitionReports = await client(context.env.DB)
     .select()
     .from(reports)
     .where(eq(reports.competitionId, competition.id));
 
   const allTeams = await client(context.env.DB).select().from(teams).all();
 
-  const withTeamNameReport = report.map((r) => {
+  const withTeamNameReports = competitionReports.map((r) => {
     const team = allTeams.find((t) => t.id === r.teamId);
     return {
       ...r,
@@ -36,7 +36,7 @@ export const loader = async ({ context }: LoaderArgs) => {
     };
   });
 
-  const groupedReport = withTeamNameReport.reduce(
+  const groupedReport = withTeamNameReports.reduce(
     (acc, cur) => {
       if (!acc[cur.teamId]) {
         acc[cur.teamId] = [];
