@@ -117,8 +117,6 @@ export const TimeSeriesChart = ({
             score: r.score,
           }));
 
-          console.log(teamId, data);
-
           return (
             <Recharts.Line
               id={teamId.toString()}
