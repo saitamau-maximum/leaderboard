@@ -27,35 +27,31 @@ export const loader = async ({ context }: LoaderArgs) => {
     .from(reports)
     .where(eq(reports.competitionId, competition.id));
 
-  const allTeams = await client(context.env.DB).select().from(teams).all();
-
-  const withTeamNameReports = competitionReports.map((r) => {
-    const team = allTeams.find((t) => t.id === r.teamId);
-    return {
-      ...r,
-      teamName: team?.name ?? "不明",
-    };
-  });
-
-  const timeSortedReports = withTeamNameReports.sort((a, b) => {
-    return (
-      new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()
-    );
-  });
+  const competitionTeams = await client(context.env.DB)
+    .select()
+    .from(teams)
+    .where(eq(teams.competitionId, competition.id))
+    .all();
 
   return json({
-    reports: timeSortedReports,
+    reports: competitionReports,
+    teams: competitionTeams,
   });
 };
 
 export default function LeaderboardPage() {
-  const data = useLoaderData<typeof loader>();
+  const { reports, teams } = useLoaderData<typeof loader>();
 
   return (
     <MaxWidthCenterLayout>
       <h1>Leaderboard</h1>
-      <TimeSeriesChart reports={data.reports} />
-      <ScoreTable reports={data.reports} />
+      <TimeSeriesChart
+        reports={reports}
+        teams={teams}
+        startedAt={new Date("2023-09-02T10:00:00+09:00")}
+        endedAt={new Date("2023-09-02T19:00:00+09:00")}
+      />
+      <ScoreTable reports={reports} teams={teams} />
     </MaxWidthCenterLayout>
   );
 }

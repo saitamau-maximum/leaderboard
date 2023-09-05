@@ -8,23 +8,28 @@ interface ScoreTableProps {
     score: number;
     status: string;
     submittedAt: string;
-    teamName: string;
+  }[];
+  teams: {
+    id: number;
+    name: string;
+    competitionId: number;
   }[];
 }
 
-export const ScoreTable = ({ reports }: ScoreTableProps) => {
+export const ScoreTable = ({ reports, teams }: ScoreTableProps) => {
   // best score of each team
   const bestScoreOfEachTeam = reports.reduce((acc, cur) => {
     const teamId = cur.teamId;
+    const teamName = teams.find((team) => team.id === teamId)?.name ?? "不明";
     const score = cur.score;
     if (acc[teamId] === undefined) {
       acc[teamId] = {
-        teamName: cur.teamName,
+        teamName,
         score,
       };
     } else {
       acc[teamId] = {
-        teamName: cur.teamName,
+        teamName,
         score: Math.max(acc[teamId].score, score),
       };
     }
@@ -47,7 +52,7 @@ export const ScoreTable = ({ reports }: ScoreTableProps) => {
             <tr key={teamId}>
               <td>{index + 1}</td>
               <td>{teamName}</td>
-              <td>{score}点</td>
+              <td>{score.toLocaleString()} 点</td>
             </tr>
           ))}
       </tbody>
