@@ -21,7 +21,10 @@ interface TimeSeriesChartProps {
 }
 
 const formatTime = (date: Date) => {
-  return date.toISOString().split("T")[1].split(".")[0].slice(0, -3);
+  return date.toLocaleTimeString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    hour12: false,
+  });
 };
 
 const STRONG_COLORS = [
