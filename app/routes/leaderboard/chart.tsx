@@ -101,6 +101,7 @@ export const TimeSeriesChart = ({
           domain={[startedAt.getTime(), endedAt.getTime()]}
           tickFormatter={(unixTime) => formatTime(new Date(unixTime))}
           ticks={xaxisTicks}
+          allowDuplicatedCategory={false}
         />
         <Recharts.YAxis tickFormatter={(val: number) => val.toLocaleString()} />
         <Recharts.Tooltip
@@ -116,8 +117,12 @@ export const TimeSeriesChart = ({
             score: r.score,
           }));
 
+          console.log(teamId, data);
+
           return (
             <Recharts.Line
+              id={teamId.toString()}
+              name={teamName}
               key={teamId}
               type="monotone"
               dataKey="score"
@@ -125,7 +130,6 @@ export const TimeSeriesChart = ({
               stroke={STRONG_COLORS[i % STRONG_COLORS.length]}
               strokeWidth={2}
               dot={false}
-              name={teamName}
             />
           );
         })}
