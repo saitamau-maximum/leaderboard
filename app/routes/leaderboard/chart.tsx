@@ -77,7 +77,7 @@ export const TimeSeriesChart = ({
           .filter(
             (report) =>
               report.teamId === team.id &&
-              getChunkEndTime(new Date(report.submittedAt)).getTime() === i
+              getChunkEndTime(new Date(report.submittedAt)).getTime() <= i
           )
           .slice(-1)[0]?.score ?? 0;
 
