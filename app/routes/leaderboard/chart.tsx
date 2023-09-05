@@ -21,10 +21,12 @@ interface TimeSeriesChartProps {
 }
 
 const formatTime = (date: Date) => {
-  return date.toLocaleTimeString("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    hour12: false,
-  });
+  return date
+    .toLocaleTimeString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      hour12: false,
+    })
+    .slice(0, -3);
 };
 
 const STRONG_COLORS = [
