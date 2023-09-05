@@ -64,15 +64,30 @@ export const TimeSeriesChart = ({
     number,
     { score: number; chunkEndTime: Date }[]
   >();
+  const xaxisTicks = [];
 
-  timeSortedReports.forEach((report) => {
-    const arr = teamsReportMap.get(report.teamId) ?? [];
-    arr.push({
-      score: report.score,
-      chunkEndTime: new Date(report.submittedAt),
+  for (let i = startedAt.getTime(); i <= endedAt.getTime(); i += chunkSpan) {
+    xaxisTicks.push(i);
+    teams.forEach((team) => {
+      const arr = teamsReportMap.get(team.id) ?? [];
+      const lastscore =
+        timeSortedReports
+          .filter(
+            (report) =>
+              report.teamId === team.id &&
+              getChunkEndTime(new Date(report.submittedAt)).getTime() === i
+          )
+          .slice(-1)[0]?.score ?? 0;
+
+      arr.push({
+        score: lastscore,
+        chunkEndTime: new Date(i),
+      });
+
+      teamsReportMap.set(team.id, arr);
     });
-    teamsReportMap.set(report.teamId, arr);
-  });
+  }
+  console.log("report", teamsReportMap.entries());
 
   return (
     <Recharts.ResponsiveContainer width="100%" height={400}>
@@ -83,6 +98,7 @@ export const TimeSeriesChart = ({
           type="number"
           domain={[startedAt.getTime(), endedAt.getTime()]}
           tickFormatter={(unixTime) => formatTime(new Date(unixTime))}
+          ticks={xaxisTicks}
         />
         <Recharts.YAxis tickFormatter={(val: number) => val.toLocaleString()} />
         <Recharts.Tooltip
