@@ -52,7 +52,7 @@ export const ScoreTable = ({ reports, teams }: ScoreTableProps) => {
             <tr key={teamId}>
               <td>{index + 1}</td>
               <td>{teamName}</td>
-              <td>{score}点</td>
+              <td>{score.toLocaleString()} 点</td>
             </tr>
           ))}
       </tbody>

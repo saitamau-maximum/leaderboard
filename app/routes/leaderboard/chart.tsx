@@ -71,8 +71,6 @@ export const TimeSeriesChart = ({
     teamsReportMap.set(report.teamId, arr);
   });
 
-  console.log(JSON.stringify(teamsReportMap.get(1)));
-
   return (
     <Recharts.ResponsiveContainer width="100%" height={400}>
       <Recharts.LineChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
@@ -83,8 +81,11 @@ export const TimeSeriesChart = ({
           domain={[startedAt.getTime(), endedAt.getTime()]}
           tickFormatter={(unixTime) => formatTime(new Date(unixTime))}
         />
-        <Recharts.YAxis />
-        <Recharts.Tooltip labelFormatter={(val) => formatTime(new Date(val))} />
+        <Recharts.YAxis tickFormatter={(val: number) => val.toLocaleString()} />
+        <Recharts.Tooltip
+          labelFormatter={(val: number) => formatTime(new Date(val))}
+          formatter={(val: number) => val.toLocaleString()}
+        />
         <Recharts.Legend />
         {Array.from(teamsReportMap.entries()).map(([teamId, reports], i) => {
           const teamName =

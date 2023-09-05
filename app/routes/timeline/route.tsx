@@ -75,7 +75,7 @@ export default function TimelinePage() {
                     color: item.status === "pass" ? "green" : "red",
                   }}
                 >
-                  {item.score}点
+                  {item.score.toLocaleString()} 点
                 </p>
               </div>
             </Timeline.Item>
