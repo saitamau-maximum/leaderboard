@@ -10,8 +10,14 @@ interface TimeSeriesChartProps {
     score: number;
     status: string;
     submittedAt: string;
-    teamName: string;
   }[];
+  teams: {
+    id: number;
+    name: string;
+    competitionId: number;
+  }[];
+  startedAt: Date;
+  endedAt: Date;
 }
 
 const formatTime = (date: Date) => {
@@ -31,29 +37,47 @@ const STRONG_COLORS = [
   "#ffe119",
 ];
 
-export const TimeSeriesChart = ({ reports }: TimeSeriesChartProps) => {
-  const groupedReports = reports.reduce((acc, cur) => {
-    const teamId = cur.teamId;
-    const score = cur.score;
-    const submittedAt = formatTime(new Date(cur.submittedAt));
-    if (acc[teamId] === undefined) {
-      acc[teamId] = {
-        teamName: cur.teamName,
-        data: [
-          {
-            score,
-            submittedAt,
-          },
-        ],
-      };
-    } else {
-      acc[teamId].data.push({
-        score,
-        submittedAt,
-      });
-    }
-    return acc;
-  }, {} as Record<number, { teamName: string; data: { score: number; submittedAt: string }[] }>);
+// 分単位で区切って、区切り毎の直近のスコアを表示する
+const chunkSpan = 15 * 60 * 1000; // 15分
+// その区切りの最後の時間を返す
+const getChunkEndTime = (date: Date) => {
+  return new Date(Math.floor(date.getTime() / chunkSpan) * chunkSpan);
+};
+
+export const TimeSeriesChart = ({
+  reports,
+  teams,
+  startedAt,
+  endedAt,
+}: TimeSeriesChartProps) => {
+  // submittedAt でソート
+  const timeSortedReports = reports.sort((a, b) => {
+    return (
+      new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()
+    );
+  });
+  // teamId => { score, chunkEndTime }[]
+  const teamsReportMap = new Map<
+    number,
+    { score: number; chunkEndTime: Date }[]
+  >();
+
+  timeSortedReports.forEach((report) => {
+    const arr = teamsReportMap.get(report.teamId) ?? [];
+    const reportObj = {
+      score: report.score,
+      chunkEndTime: getChunkEndTime(new Date(report.submittedAt)),
+    };
+    if (
+      arr.length > 0 &&
+      arr.slice(-1)[0].chunkEndTime == reportObj.chunkEndTime
+    )
+      arr.splice(-1);
+    arr.push(reportObj);
+    teamsReportMap.set(report.teamId, arr);
+  });
+
+  console.log(JSON.stringify(teamsReportMap.get(1)));
 
   return (
     <Recharts.ResponsiveContainer width="100%" height={400}>
@@ -63,16 +87,27 @@ export const TimeSeriesChart = ({ reports }: TimeSeriesChartProps) => {
         <Recharts.YAxis />
         <Recharts.Tooltip />
         <Recharts.Legend />
-        {Object.entries(groupedReports).map(([teamId, { teamName, data }]) => (
-          <Recharts.Line
-            key={teamId}
-            type="monotone"
-            dataKey="score"
-            data={data}
-            name={teamName}
-            stroke={STRONG_COLORS[Number(teamId) % STRONG_COLORS.length]}
-          />
-        ))}
+        {Array.from(teamsReportMap.entries()).map(([teamId, reports], i) => {
+          const teamName =
+            teams.find((team) => team.id === teamId)?.name ?? "不明";
+          const data = reports.map((r) => ({
+            submittedAt: formatTime(r.chunkEndTime),
+            score: r.score,
+          }));
+
+          return (
+            <Recharts.Line
+              key={teamId}
+              type="monotone"
+              dataKey="score"
+              data={data}
+              stroke={STRONG_COLORS[i % STRONG_COLORS.length]}
+              strokeWidth={2}
+              dot={false}
+              name={teamName}
+            />
+          );
+        })}
       </Recharts.LineChart>
     </Recharts.ResponsiveContainer>
   );
