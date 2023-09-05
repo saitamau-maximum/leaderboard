@@ -64,16 +64,10 @@ export const TimeSeriesChart = ({
 
   timeSortedReports.forEach((report) => {
     const arr = teamsReportMap.get(report.teamId) ?? [];
-    const reportObj = {
+    arr.push({
       score: report.score,
-      chunkEndTime: getChunkEndTime(new Date(report.submittedAt)),
-    };
-    if (
-      arr.length > 0 &&
-      arr.slice(-1)[0].chunkEndTime == reportObj.chunkEndTime
-    )
-      arr.splice(-1);
-    arr.push(reportObj);
+      chunkEndTime: new Date(report.submittedAt),
+    });
     teamsReportMap.set(report.teamId, arr);
   });
 
@@ -83,15 +77,20 @@ export const TimeSeriesChart = ({
     <Recharts.ResponsiveContainer width="100%" height={400}>
       <Recharts.LineChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
         <Recharts.CartesianGrid strokeDasharray="3 3" />
-        <Recharts.XAxis dataKey="submittedAt" />
+        <Recharts.XAxis
+          dataKey="submittedAt"
+          type="number"
+          domain={[startedAt.getTime(), endedAt.getTime()]}
+          tickFormatter={(unixTime) => formatTime(new Date(unixTime))}
+        />
         <Recharts.YAxis />
-        <Recharts.Tooltip />
+        <Recharts.Tooltip labelFormatter={(val) => formatTime(new Date(val))} />
         <Recharts.Legend />
         {Array.from(teamsReportMap.entries()).map(([teamId, reports], i) => {
           const teamName =
             teams.find((team) => team.id === teamId)?.name ?? "不明";
           const data = reports.map((r) => ({
-            submittedAt: formatTime(r.chunkEndTime),
+            submittedAt: r.chunkEndTime.getTime(),
             score: r.score,
           }));
 
