@@ -17,7 +17,7 @@ const HEADER_NAVIGATIONS = [
   {
     name: "タイムライン",
     href: "/timeline",
-    pathMatcher: /^\/achievement/,
+    pathMatcher: /^\/timeline/,
   },
 ];
 
