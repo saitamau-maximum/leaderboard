@@ -1,0 +1,38 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.date {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.title {
+  margin: 0;
+}
+
+.status {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.active {
+  background-color: #2ecc71;
+}
+
+.inactive {
+  background-color: #e74c3c;
+}

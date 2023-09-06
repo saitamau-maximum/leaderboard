@@ -10,21 +10,39 @@ import { useLoaderData } from "@remix-run/react";
 import { client } from "~/db/client.server";
 import { competitions, reports, teams } from "~/db/schema";
 import { eq } from "drizzle-orm";
+import { TimelineDisplay } from "./timelineDisplay";
+import { Hero } from "./hero";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: `Timeline | ${SITE_TITLE}` }];
 };
 
 export const loader = async ({ context }: LoaderArgs) => {
-  const [competition, ..._1] = await client(context.env.DB)
-    .select()
+  const allCompetitions = await client(context.env.DB)
+    .select({
+      id: competitions.id,
+      name: competitions.name,
+      startedAt: competitions.startedAt,
+      endedAt: competitions.endedAt,
+    })
     .from(competitions)
-    .where(eq(competitions.isActive, 1));
+    .all();
+
+  const latestCompetition = allCompetitions.sort(
+    (a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()
+  )[0];
+
+  if (!latestCompetition) {
+    return json({
+      competition: null,
+      reports: [],
+    });
+  }
 
   const report = await client(context.env.DB)
     .select()
     .from(reports)
-    .where(eq(reports.competitionId, competition.id));
+    .where(eq(reports.competitionId, latestCompetition.id));
 
   const allTeams = await client(context.env.DB).select().from(teams).all();
 
@@ -43,45 +61,19 @@ export const loader = async ({ context }: LoaderArgs) => {
     );
   });
 
-  return json({ reports: withTeamNameReports });
+  return json({
+    competition: latestCompetition,
+    reports: withTeamNameReports,
+  });
 };
 
 export default function TimelinePage() {
-  const { reports } = useLoaderData<typeof loader>();
+  const { competition, reports } = useLoaderData<typeof loader>();
 
   return (
     <MaxWidthCenterLayout>
-      <h1>Timeline</h1>
-      <section style={{ display: "flex", justifyContent: "center" }}>
-        <Timeline.Container expand>
-          {reports.map((item) => (
-            <Timeline.Item
-              key={item.id}
-              label={new Date(item.submittedAt).toLocaleString("ja-JP", {
-                timeZone: "Asia/Tokyo",
-              })}
-              active={item.status === "pass"}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <h2>{item.teamName}</h2>
-                <p
-                  style={{
-                    color: item.status === "pass" ? "green" : "red",
-                  }}
-                >
-                  {item.score.toLocaleString()} 点
-                </p>
-              </div>
-            </Timeline.Item>
-          ))}
-        </Timeline.Container>
-      </section>
+      <Hero competition={competition} />
+      <TimelineDisplay reports={reports} />
     </MaxWidthCenterLayout>
   );
 }

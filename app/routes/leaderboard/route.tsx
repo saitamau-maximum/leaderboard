@@ -11,39 +11,57 @@ import { client } from "~/db/client.server";
 import { competitions, reports, teams } from "~/db/schema";
 import { ScoreTable } from "./scoreTable";
 import { TimeSeriesChart } from "./chart";
+import { Hero } from "./hero";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: `Leaderboard | ${SITE_TITLE}` }];
 };
 
 export const loader = async ({ context }: LoaderArgs) => {
-  const [competition, ..._1] = await client(context.env.DB)
-    .select()
+  const allCompetitions = await client(context.env.DB)
+    .select({
+      id: competitions.id,
+      name: competitions.name,
+      startedAt: competitions.startedAt,
+      endedAt: competitions.endedAt,
+    })
     .from(competitions)
-    .where(eq(competitions.isActive, 1));
+    .all();
+
+  const latestCompetition = allCompetitions.sort(
+    (a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()
+  )[0];
+
+  if (!latestCompetition) {
+    return json({
+      competition: null,
+      reports: [],
+      teams: [],
+    });
+  }
 
   const competitionReports = await client(context.env.DB)
     .select()
     .from(reports)
-    .where(eq(reports.competitionId, competition.id));
+    .where(eq(reports.competitionId, latestCompetition.id));
 
   const competitionTeams = await client(context.env.DB)
     .select()
     .from(teams)
-    .where(eq(teams.competitionId, competition.id));
-
+    .where(eq(teams.competitionId, latestCompetition.id));
   return json({
+    competition: latestCompetition,
     reports: competitionReports,
     teams: competitionTeams,
   });
 };
 
 export default function LeaderboardPage() {
-  const { reports, teams } = useLoaderData<typeof loader>();
+  const { competition, reports, teams } = useLoaderData<typeof loader>();
 
   return (
     <MaxWidthCenterLayout>
-      <h1>Leaderboard</h1>
+      <Hero competition={competition} />
       <TimeSeriesChart
         reports={reports}
         teams={teams}

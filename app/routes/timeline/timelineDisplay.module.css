@@ -1,0 +1,11 @@
+.container {
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.scoreCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
