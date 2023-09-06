@@ -56,16 +56,18 @@ export const ScoreTable = ({ reports, teams }: ScoreTableProps) => {
           .sort((a, b) => b[1].bestScore - a[1].bestScore)
           .map(([teamId, { teamName, bestScore }], i) => (
             <tr key={teamId}>
-              <td className={styles.rank}>
-                <span
-                  className={clsx(
-                    styles.medal,
-                    i === 0 && styles.gold,
-                    i === 1 && styles.silver,
-                    i === 2 && styles.bronze
-                  )}
-                />
-                {i + 1}
+              <td>
+                <div className={styles.rank}>
+                  <span
+                    className={clsx(
+                      styles.medal,
+                      i === 0 && styles.gold,
+                      i === 1 && styles.silver,
+                      i === 2 && styles.bronze
+                    )}
+                  />
+                  {i + 1}
+                </div>
               </td>
               <td>{teamName}</td>
               <td>{bestScore.toLocaleString()}</td>
