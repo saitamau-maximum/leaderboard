@@ -30,8 +30,7 @@ export const loader = async ({ context }: LoaderArgs) => {
   const competitionTeams = await client(context.env.DB)
     .select()
     .from(teams)
-    .where(eq(teams.competitionId, competition.id))
-    .all();
+    .where(eq(teams.competitionId, competition.id));
 
   return json({
     reports: competitionReports,

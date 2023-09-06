@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import styles from "./scoreTable.module.css";
 
 interface ScoreTableProps {
@@ -17,24 +18,29 @@ interface ScoreTableProps {
 }
 
 export const ScoreTable = ({ reports, teams }: ScoreTableProps) => {
-  // best score of each team
-  const bestScoreOfEachTeam = reports.reduce((acc, cur) => {
-    const teamId = cur.teamId;
-    const teamName = teams.find((team) => team.id === teamId)?.name ?? "不明";
-    const score = cur.score;
-    if (acc[teamId] === undefined) {
-      acc[teamId] = {
-        teamName,
-        score,
-      };
-    } else {
-      acc[teamId] = {
-        teamName,
-        score: Math.max(acc[teamId].score, score),
-      };
+  const scoresMap = new Map<number, { teamName: string; bestScore: number }>();
+
+  for (const report of reports) {
+    const team = teams.find((t) => t.id === report.teamId);
+    if (!team) continue;
+
+    const currentBestScore = scoresMap.get(report.teamId)?.bestScore ?? 0;
+    if (report.score > currentBestScore) {
+      scoresMap.set(report.teamId, {
+        teamName: team.name,
+        bestScore: report.score,
+      });
     }
-    return acc;
-  }, {} as Record<number, { teamName: string; score: number }>);
+  }
+
+  for (const team of teams) {
+    if (scoresMap.has(team.id)) continue;
+
+    scoresMap.set(team.id, {
+      teamName: team.name,
+      bestScore: 0,
+    });
+  }
 
   return (
     <table className={styles.table}>
@@ -46,13 +52,23 @@ export const ScoreTable = ({ reports, teams }: ScoreTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(bestScoreOfEachTeam)
-          .sort((a, b) => b[1].score - a[1].score)
-          .map(([teamId, { teamName, score }], index) => (
+        {[...scoresMap.entries()]
+          .sort((a, b) => b[1].bestScore - a[1].bestScore)
+          .map(([teamId, { teamName, bestScore }], i) => (
             <tr key={teamId}>
-              <td>{index + 1}</td>
+              <td className={styles.rank}>
+                <span
+                  className={clsx(
+                    styles.medal,
+                    i === 0 && styles.gold,
+                    i === 1 && styles.silver,
+                    i === 2 && styles.bronze
+                  )}
+                />
+                {i + 1}
+              </td>
               <td>{teamName}</td>
-              <td>{score.toLocaleString()} 点</td>
+              <td>{bestScore}</td>
             </tr>
           ))}
       </tbody>

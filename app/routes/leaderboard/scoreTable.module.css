@@ -28,3 +28,35 @@
 :global(.dark) .table tbody td {
   border-bottom: 1px solid var(--color-gray-700);
 }
+
+.rank {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.medal {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-block;
+  text-align: center;
+  border-radius: 50%;
+  color: inherit;
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.gold {
+  background-color: gold;
+  color: var(--color-gray-50) !important;
+}
+
+.silver {
+  background-color: silver;
+  color: var(--color-gray-900) !important;
+}
+
+.bronze {
+  background-color: #cd7f32;
+  color: var(--color-gray-50) !important;
+}
