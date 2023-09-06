@@ -1,1 +1,1 @@
-export const SITE_TITLE = "Maximum Private ISUCON Portal";
+export const SITE_TITLE = "Maximum Leaderboard";
