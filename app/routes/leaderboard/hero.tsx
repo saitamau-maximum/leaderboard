@@ -12,10 +12,7 @@ interface HeroProps {
 }
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <section className={styles.hero}>
-    <h1>Leaderboard</h1>
-    {children}
-  </section>
+  <section className={styles.hero}>{children}</section>
 );
 
 export const Hero = ({ competition }: HeroProps) => {
