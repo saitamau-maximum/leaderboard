@@ -15,6 +15,20 @@
       "when": 1693614897660,
       "tag": "0001_late_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1693962408814,
+      "tag": "0002_plain_madrox",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1693962697165,
+      "tag": "0003_broken_prism",
+      "breakpoints": true
     }
   ]
 }

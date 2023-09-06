@@ -10,7 +10,8 @@ export const competitions = sqliteTable(
   {
     id: integer("id").primaryKey().notNull(),
     name: text("name").notNull(),
-    isActive: integer("isActive").notNull(),
+    startedAt: text("startedAt").notNull(),
+    endedAt: text("endedAt").notNull(),
     verificationCode: text("verificationCode").notNull().unique(),
   },
   (competitions) => ({
