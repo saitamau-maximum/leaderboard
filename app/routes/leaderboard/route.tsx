@@ -62,13 +62,17 @@ export default function LeaderboardPage() {
   return (
     <MaxWidthCenterLayout>
       <Hero competition={competition} />
-      <TimeSeriesChart
-        reports={reports}
-        teams={teams}
-        startedAt={new Date("2023-09-02T10:00:00+09:00")}
-        endedAt={new Date("2023-09-02T19:00:00+09:00")}
-      />
-      <ScoreTable reports={reports} teams={teams} />
+      {competition && (
+        <>
+          <TimeSeriesChart
+            reports={reports}
+            teams={teams}
+            startedAt={new Date(competition.startedAt)}
+            endedAt={new Date(competition.endedAt)}
+          />
+          <ScoreTable reports={reports} teams={teams} />
+        </>
+      )}
     </MaxWidthCenterLayout>
   );
 }
