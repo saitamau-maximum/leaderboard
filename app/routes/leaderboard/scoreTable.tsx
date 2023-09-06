@@ -68,7 +68,7 @@ export const ScoreTable = ({ reports, teams }: ScoreTableProps) => {
                 {i + 1}
               </td>
               <td>{teamName}</td>
-              <td>{bestScore}</td>
+              <td>{bestScore.toLocaleString()}</td>
             </tr>
           ))}
       </tbody>
