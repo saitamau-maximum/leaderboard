@@ -8,7 +8,8 @@ import { uuid } from "@cfworker/uuid";
 
 const schema = object({
   name: string(),
-  isActive: boolean(),
+  startedAt: string(),
+  endedAt: string(),
 });
 
 export const action = async ({ context, request }: LoaderArgs) => {
@@ -24,13 +25,25 @@ export const action = async ({ context, request }: LoaderArgs) => {
   if (!res.success) {
     return json({ error: "リクエストが不正です" }, { status: 400 });
   }
-  const { name, isActive } = res.output;
+  const { name, startedAt, endedAt } = res.output;
+  const dateStartedAt = new Date(startedAt);
+  const dateEndedAt = new Date(endedAt);
+  if (dateStartedAt > dateEndedAt) {
+    return json(
+      { error: "開始日時が終了日時よりも後になっています" },
+      { status: 400 }
+    );
+  }
+  if (isNaN(dateStartedAt.getTime()) || isNaN(dateEndedAt.getTime())) {
+    return json({ error: "日付が不正です" }, { status: 400 });
+  }
   const verificationCode = uuid();
   const competition = await client(context.env.DB)
     .insert(competitions)
     .values({
       name,
-      isActive: isActive ? 1 : 0,
+      startedAt: dateStartedAt.toISOString(),
+      endedAt: dateEndedAt.toISOString(),
       verificationCode,
     })
     .returning();
