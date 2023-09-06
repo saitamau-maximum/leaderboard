@@ -29,6 +29,13 @@
       "when": 1693962697165,
       "tag": "0003_broken_prism",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1693972912696,
+      "tag": "0004_lonely_the_renegades",
+      "breakpoints": true
     }
   ]
 }
