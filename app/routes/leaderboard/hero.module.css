@@ -29,10 +29,15 @@
   border-radius: 50%;
 }
 
-.active {
-  background-color: #2ecc71;
+.before {
+  background-color: #4363d8;
 }
 
-.inactive {
-  background-color: #e74c3c;
+.during {
+  background-color: #3cb44b;
+}
+
+
+.after {
+  background-color: #e6194b;
 }

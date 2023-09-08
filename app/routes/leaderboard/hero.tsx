@@ -28,7 +28,15 @@ export const Hero = ({ competition }: HeroProps) => {
   const startedAt = new Date(competition.startedAt);
   const endedAt = new Date(competition.endedAt);
 
-  const isActive = startedAt <= now && now <= endedAt;
+  const competitionState: "before" | "during" | "after" = (() => {
+    if (now.getTime() < startedAt.getTime()) {
+      return "before";
+    } else if (now.getTime() > endedAt.getTime()) {
+      return "after";
+    } else {
+      return "during";
+    }
+  })();
 
   return (
     <Wrapper>
@@ -44,10 +52,14 @@ export const Hero = ({ competition }: HeroProps) => {
             <span
               className={clsx(
                 styles.dot,
-                styles[isActive ? "active" : "inactive"]
+                competitionState === "before" && styles.before,
+                competitionState === "during" && styles.during,
+                competitionState === "after" && styles.after
               )}
             />
-            {isActive ? "開催中" : "開催後"}
+            {competitionState === "before" && "開催前"}
+            {competitionState === "during" && "開催中"}
+            {competitionState === "after" && "終了"}
           </span>
         </>
       )}
