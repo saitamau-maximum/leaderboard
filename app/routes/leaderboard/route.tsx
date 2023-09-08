@@ -3,7 +3,7 @@ import {
   type LoaderArgs,
   type V2_MetaFunction,
 } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRevalidator } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import { MaxWidthCenterLayout } from "~/components/layout/max-width-center";
 import { SITE_TITLE } from "~/constants/config";
@@ -12,6 +12,7 @@ import { competitions, reports, teams } from "~/db/schema";
 import { ScoreTable } from "./scoreTable";
 import { TimeSeriesChart } from "./chart";
 import { Hero } from "./hero";
+import { useEffect } from "react";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: `Leaderboard | ${SITE_TITLE}` }];
@@ -58,6 +59,13 @@ export const loader = async ({ context }: LoaderArgs) => {
 
 export default function LeaderboardPage() {
   const { competition, reports, teams } = useLoaderData<typeof loader>();
+  const revalidator = useRevalidator();
+
+  useEffect(() => {
+    setInterval(() => {
+      revalidator.revalidate();
+    }, 1000 * 60 * 5);
+  }, []);
 
   return (
     <MaxWidthCenterLayout>
