@@ -68,7 +68,11 @@ export const TimeSeriesChart = ({
   >();
   const xaxisTicks = [];
 
-  for (let i = startedAt.getTime(); i <= endedAt.getTime(); i += chunkSpan) {
+  for (
+    let i = startedAt.getTime();
+    i <= Math.min(endedAt.getTime(), Date.now() + chunkSpan);
+    i += chunkSpan
+  ) {
     xaxisTicks.push(i);
     teams.forEach((team) => {
       const arr = teamsReportMap.get(team.id) ?? [];
