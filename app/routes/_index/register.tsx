@@ -1,6 +1,5 @@
 import { Form } from "@remix-run/react";
-import { Button } from "@saitamau-maximum/ui";
-import { TextInput } from "~/components/ui/text-input";
+import { Button, Input } from "@saitamau-maximum/ui";
 import styles from "./register.module.css";
 
 interface RegisterProps {
@@ -22,11 +21,11 @@ export function Register({ error, token }: RegisterProps) {
       <Form method="post" className={styles.form}>
         <label className={styles.formItem}>
           チーム名
-          <TextInput type="text" name="team_name" />
+          <Input type="text" name="team_name" expanded />
         </label>
         <label className={styles.formItem}>
           認証コード
-          <TextInput type="password" name="verification_code" />
+          <Input type="password" name="verification_code" expanded />
         </label>
         {error && <p className={styles.error}>{error}</p>}
         <Button type="submit">トークン発行</Button>
