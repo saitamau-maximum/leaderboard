@@ -93,7 +93,6 @@ export const TimeSeriesChart = ({
       teamsReportMap.set(team.id, arr);
     });
   }
-  console.log("report", teamsReportMap.entries());
 
   return (
     <Recharts.ResponsiveContainer width="100%" height={400}>
