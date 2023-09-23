@@ -28,6 +28,7 @@ export const action = async ({ context, request }: LoaderArgs) => {
   const { name, startedAt, endedAt } = res.output;
   const dateStartedAt = new Date(startedAt);
   const dateEndedAt = new Date(endedAt);
+
   if (dateStartedAt > dateEndedAt) {
     return json(
       { error: "開始日時が終了日時よりも後になっています" },

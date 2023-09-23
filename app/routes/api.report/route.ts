@@ -1,8 +1,9 @@
 import { json, type LoaderArgs } from "@remix-run/cloudflare";
 import { client } from "~/db/client.server";
-import { reports } from "~/db/schema";
+import { competitions, reports } from "~/db/schema";
 import { verifyToken } from "~/utils/token";
 import { boolean, number, object, safeParse } from "valibot";
+import { eq } from "drizzle-orm";
 
 const schema = object({
   pass: boolean(),
@@ -32,6 +33,32 @@ export const action = async ({ context, request }: LoaderArgs) => {
     return json({ error: "リクエストが不正です" }, { status: 400 });
   }
   const { pass, score } = res.output;
+  const [competition] = await client(context.env.DB)
+    .select({
+      id: competitions.id,
+      name: competitions.name,
+      startedAt: competitions.startedAt,
+      endedAt: competitions.endedAt,
+    })
+    .from(competitions)
+    .where(eq(competitions.id, competitionId));
+
+  if (!competition) {
+    return json({ error: "大会が見つかりません" }, { status: 404 });
+  }
+
+  const startedAt = new Date(competition.startedAt);
+  const endedAt = new Date(competition.endedAt);
+  const now = new Date();
+
+  if (now < startedAt) {
+    return json({ error: "大会はまだ開始されていません" }, { status: 400 });
+  }
+
+  if (now > endedAt) {
+    return json({ error: "大会はすでに終了しました" }, { status: 400 });
+  }
+
   const report = await client(context.env.DB)
     .insert(reports)
     .values({
