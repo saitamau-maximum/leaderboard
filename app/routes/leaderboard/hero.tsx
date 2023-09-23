@@ -2,6 +2,7 @@ import { formatDateTime } from "~/utils/datetime";
 import styles from "./hero.module.css";
 import { ArrowRight } from "react-feather";
 import clsx from "clsx";
+import { SelectBox } from "@saitamau-maximum/ui";
 
 interface HeroProps {
   competition: {

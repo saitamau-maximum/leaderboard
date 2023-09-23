@@ -12,7 +12,8 @@ import { competitions, reports, teams } from "~/db/schema";
 import { ScoreTable } from "./scoreTable";
 import { TimeSeriesChart } from "./chart";
 import { Hero } from "./hero";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { CompetitionSelector } from "./competitionSelector";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: `Leaderboard | ${SITE_TITLE}` }];
@@ -35,6 +36,7 @@ export const loader = async ({ context }: LoaderArgs) => {
 
   if (!latestCompetition) {
     return json({
+      allCompetitions: [],
       competition: null,
       reports: [],
       teams: [],
@@ -50,7 +52,12 @@ export const loader = async ({ context }: LoaderArgs) => {
     .select()
     .from(teams)
     .where(eq(teams.competitionId, latestCompetition.id));
+
   return json({
+    allCompetitions: allCompetitions.map((c) => ({
+      id: c.id,
+      name: c.name,
+    })),
     competition: latestCompetition,
     reports: competitionReports,
     teams: competitionTeams,
@@ -58,8 +65,17 @@ export const loader = async ({ context }: LoaderArgs) => {
 };
 
 export default function LeaderboardPage() {
-  const { competition, reports, teams } = useLoaderData<typeof loader>();
+  const { allCompetitions, competition, reports, teams } =
+    useLoaderData<typeof loader>();
   const revalidator = useRevalidator();
+  const [selectedCompetitionId, setSelectedCompetitionId] = useState(
+    competition?.id
+  );
+  const [selectedCompetitionData, setSelectedCompetition] = useState({
+    competition,
+    reports,
+    teams,
+  });
 
   useEffect(() => {
     setInterval(() => {
@@ -67,18 +83,44 @@ export default function LeaderboardPage() {
     }, 1000 * 60 * 5);
   }, []);
 
+  const fetchCompetitionById = useCallback(
+    async (id: number) => {
+      const competitionData = await fetch(`/api/competition/${id}`).then(
+        (res) => res.json()
+      );
+      setSelectedCompetition(competitionData as any);
+    },
+    [setSelectedCompetitionId]
+  );
+
+  const handleSelectedCompetitionIdChange = useCallback(
+    (id: number) => {
+      setSelectedCompetitionId(id);
+      fetchCompetitionById(id);
+    },
+    [setSelectedCompetitionId]
+  );
+
   return (
     <MaxWidthCenterLayout>
-      <Hero competition={competition} />
-      {competition && (
+      <CompetitionSelector
+        allCompetitions={allCompetitions}
+        selectedCompetitionId={selectedCompetitionId}
+        onSelectedCompetitionIdChange={handleSelectedCompetitionIdChange}
+      />
+      <Hero competition={selectedCompetitionData.competition} />
+      {selectedCompetitionData.competition && (
         <>
           <TimeSeriesChart
-            reports={reports}
-            teams={teams}
-            startedAt={new Date(competition.startedAt)}
-            endedAt={new Date(competition.endedAt)}
+            reports={selectedCompetitionData.reports}
+            teams={selectedCompetitionData.teams}
+            startedAt={new Date(selectedCompetitionData.competition.startedAt)}
+            endedAt={new Date(selectedCompetitionData.competition.endedAt)}
           />
-          <ScoreTable reports={reports} teams={teams} />
+          <ScoreTable
+            reports={selectedCompetitionData.reports}
+            teams={selectedCompetitionData.teams}
+          />
         </>
       )}
     </MaxWidthCenterLayout>
