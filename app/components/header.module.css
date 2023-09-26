@@ -142,3 +142,13 @@
 :global(.light) .loginIcon {
   stroke: var(--color-gray-700);
 }
+
+.showOnMobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .showOnMobile {
+    display: block;
+  }
+}

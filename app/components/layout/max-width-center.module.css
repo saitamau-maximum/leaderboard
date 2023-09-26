@@ -1,6 +1,6 @@
 .container {
   margin: 0 auto;
-  width: 100%;
+  padding: var(--header-height) 1rem 0 1rem;
 }
 
 .md {
