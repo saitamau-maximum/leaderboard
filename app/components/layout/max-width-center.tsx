@@ -17,8 +17,6 @@ export const MaxWidthCenterLayout = ({
   size = "md",
 }: MaxWidthCenterLayoutProps) => {
   return (
-    <div className={clsx(styles.container, SIZE_MAP[size])}>
-      <main className={styles.main}>{children}</main>
-    </div>
+    <div className={clsx(styles.container, SIZE_MAP[size])}>{children}</div>
   );
 };
