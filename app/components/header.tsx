@@ -1,4 +1,4 @@
-import { useLocation } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { Button, Header } from "@saitamau-maximum/ui";
 import { Menu } from "react-feather";
 import { useMemo, useReducer } from "react";
@@ -43,6 +43,7 @@ export default function _Header() {
   return (
     <Header
       navigations={navigations}
+      link={({ href, ...props }) => <Link {...props} to={href as string} />}
       dropdownOpen={isDropdownOpen}
       onDropdownClose={toggleDropdownOpen}
     >
