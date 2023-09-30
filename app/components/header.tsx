@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@remix-run/react";
 import { Button, Header } from "@saitamau-maximum/ui";
 import { Menu } from "react-feather";
-import { useMemo, useReducer } from "react";
+import { useMemo, useState } from "react";
 import styles from "./header.module.css";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -26,10 +26,8 @@ const ShowOnMobile = ({ children }: { children: React.ReactNode }) => (
 
 export default function _Header() {
   const location = useLocation();
-  const [isDropdownOpen, toggleDropdownOpen] = useReducer(
-    (state) => !state,
-    false
-  );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const toggleDropdownOpen = () => setIsDropdownOpen((open) => !open);
 
   const navigations = useMemo(
     () =>
@@ -43,7 +41,13 @@ export default function _Header() {
   return (
     <Header
       navigations={navigations}
-      link={({ href, ...props }) => <Link {...props} to={href as string} />}
+      link={({ href, ...props }) => (
+        <Link
+          {...props}
+          to={href as string}
+          onClick={() => setIsDropdownOpen(false)}
+        />
+      )}
       dropdownOpen={isDropdownOpen}
       onDropdownClose={toggleDropdownOpen}
     >
