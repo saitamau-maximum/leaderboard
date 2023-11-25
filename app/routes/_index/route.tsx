@@ -14,10 +14,6 @@ import { eq } from "drizzle-orm";
 import { generateToken } from "~/utils/token";
 import { useActionData } from "@remix-run/react";
 
-export const meta: V2_MetaFunction = () => {
-  return [{ title: SITE_TITLE }];
-};
-
 export const action = async ({ context, request }: LoaderArgs) => {
   const body = await request.formData();
   const teamName = body.get("team_name");

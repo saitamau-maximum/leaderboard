@@ -10,6 +10,12 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
+import {
+  OGP_URL,
+  SITE_DESCRIPTION,
+  SITE_TITLE,
+  TWITTER_ID,
+} from "./constants/config";
 import Header from "./components/header";
 import "~/style/global.css";
 import "@saitamau-maximum/ui/style.css";
@@ -23,10 +29,21 @@ function Layout({ children }: { children: React.ReactNode }) {
     <html lang="ja" className="light">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script src="/scripts/theme.js" />
-        {/* プライベート開催のため、一応検索エンジンにインデックスされないようにする */}
+        <meta name="viewport" content="width=device-width" />
         <meta name="robots" content="noindex" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content={`@${TWITTER_ID}`} />
+        <meta name="twitter:creator" content={`@${TWITTER_ID}`} />
+        <meta name="twitter:title" content={SITE_TITLE} />
+        <meta name="twitter:description" content={SITE_DESCRIPTION} />
+        <meta name="twitter:image" content={OGP_URL} />
+        <meta property="og:url" content="https://leaderboard.maximum.vc/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={SITE_TITLE} />
+        <meta property="og:description" content={SITE_DESCRIPTION} />
+        <meta property="og:image" content={OGP_URL} />
+        <meta property="og:site_name" content={SITE_TITLE} />
+        <script src="/scripts/theme.js" />
         <Meta />
         <Links />
       </head>
