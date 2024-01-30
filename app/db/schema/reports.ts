@@ -8,3 +8,5 @@ export const reports = sqliteTable("reports", {
   status: text("status").notNull(),
   submittedAt: text("submittedAt").notNull(),
 });
+
+export type TReport = typeof reports.$inferInsert;

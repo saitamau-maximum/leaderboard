@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from "@remix-run/cloudflare";
+import { json, type LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { client } from "~/db/client.server";
 import { competitions, reports } from "~/db/schema";
 import { verifyToken } from "~/utils/token";
@@ -10,7 +10,7 @@ const schema = object({
   score: number(),
 });
 
-export const action = async ({ context, request }: LoaderArgs) => {
+export const action = async ({ context, request }: LoaderFunctionArgs) => {
   if (request.method !== "POST") {
     return json({ error: "メソッドが不正です" }, { status: 400 });
   }
@@ -73,7 +73,7 @@ export const action = async ({ context, request }: LoaderArgs) => {
   return json({ message: "ok", report });
 };
 
-export const loader = async ({ context }: LoaderArgs) => {
+export const loader = async ({ context }: LoaderFunctionArgs) => {
   const allReports = await client(context.env.DB)
     .select()
     .from(reports)

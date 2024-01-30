@@ -1,11 +1,6 @@
-import {
-  json,
-  type LoaderArgs,
-  type V2_MetaFunction,
-} from "@remix-run/cloudflare";
+import { json, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { MaxWidthCenterLayout } from "~/components/layout/max-width-center";
 import { Register } from "./register";
-import { SITE_TITLE } from "~/constants/config";
 import { Hero } from "./hero";
 import { Description } from "./description";
 import { client } from "~/db/client.server";
@@ -14,7 +9,7 @@ import { eq } from "drizzle-orm";
 import { generateToken } from "~/utils/token";
 import { useActionData } from "@remix-run/react";
 
-export const action = async ({ context, request }: LoaderArgs) => {
+export const action = async ({ context, request }: LoaderFunctionArgs) => {
   const body = await request.formData();
   const teamName = body.get("team_name");
   const verificationCode = body.get("verification_code");

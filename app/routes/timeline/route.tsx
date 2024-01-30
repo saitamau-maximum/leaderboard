@@ -1,11 +1,10 @@
 import {
   json,
-  type LoaderArgs,
-  type V2_MetaFunction,
+  type MetaFunction,
+  type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
 import { MaxWidthCenterLayout } from "~/components/layout/max-width-center";
 import { SITE_TITLE } from "~/constants/config";
-import { Timeline } from "@saitamau-maximum/ui";
 import { useLoaderData } from "@remix-run/react";
 import { client } from "~/db/client.server";
 import { competitions, reports, teams } from "~/db/schema";
@@ -13,11 +12,11 @@ import { eq } from "drizzle-orm";
 import { TimelineDisplay } from "./timelineDisplay";
 import { Hero } from "./hero";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{ title: `Timeline | ${SITE_TITLE}` }];
 };
 
-export const loader = async ({ context }: LoaderArgs) => {
+export const loader = async ({ context }: LoaderFunctionArgs) => {
   const allCompetitions = await client(context.env.DB)
     .select({
       id: competitions.id,
@@ -35,7 +34,7 @@ export const loader = async ({ context }: LoaderArgs) => {
   if (!latestCompetition) {
     return json({
       competition: null,
-      reports: [],
+      reports: null,
     });
   }
 
@@ -73,7 +72,7 @@ export default function TimelinePage() {
   return (
     <MaxWidthCenterLayout>
       <Hero competition={competition} />
-      <TimelineDisplay reports={reports} />
+      <TimelineDisplay reports={reports ?? []} />
     </MaxWidthCenterLayout>
   );
 }

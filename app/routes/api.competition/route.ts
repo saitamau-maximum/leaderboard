@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from "@remix-run/cloudflare";
+import { json, type LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { client } from "~/db/client.server";
 import { competitions, teams } from "~/db/schema";
 import { eq } from "drizzle-orm";
@@ -12,7 +12,7 @@ const schema = object({
   endedAt: string(),
 });
 
-export const action = async ({ context, request }: LoaderArgs) => {
+export const action = async ({ context, request }: LoaderFunctionArgs) => {
   if (request.method !== "POST") {
     return json({ error: "メソッドが不正です" }, { status: 400 });
   }

@@ -1,7 +1,7 @@
 import {
   json,
-  type LoaderArgs,
-  type V2_MetaFunction,
+  type MetaFunction,
+  type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
 import { useLoaderData, useRevalidator } from "@remix-run/react";
 import { eq } from "drizzle-orm";
@@ -15,11 +15,11 @@ import { Hero } from "./hero";
 import { useCallback, useEffect, useState } from "react";
 import { CompetitionSelector } from "./competitionSelector";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{ title: `Leaderboard | ${SITE_TITLE}` }];
 };
 
-export const loader = async ({ context }: LoaderArgs) => {
+export const loader = async ({ context }: LoaderFunctionArgs) => {
   const allCompetitions = await client(context.env.DB)
     .select({
       id: competitions.id,
@@ -36,10 +36,10 @@ export const loader = async ({ context }: LoaderArgs) => {
 
   if (!latestCompetition) {
     return json({
-      allCompetitions: [],
+      allCompetitions: null,
       competition: null,
-      reports: [],
-      teams: [],
+      reports: null,
+      teams: null,
     });
   }
 
@@ -104,7 +104,7 @@ export default function LeaderboardPage() {
   return (
     <MaxWidthCenterLayout>
       <CompetitionSelector
-        allCompetitions={allCompetitions}
+        allCompetitions={allCompetitions ?? []}
         selectedCompetitionId={selectedCompetitionId}
         onSelectedCompetitionIdChange={handleSelectedCompetitionIdChange}
       />
@@ -112,14 +112,14 @@ export default function LeaderboardPage() {
       {selectedCompetitionData.competition && (
         <>
           <TimeSeriesChart
-            reports={selectedCompetitionData.reports}
-            teams={selectedCompetitionData.teams}
+            reports={selectedCompetitionData.reports ?? []}
+            teams={selectedCompetitionData.teams ?? []}
             startedAt={new Date(selectedCompetitionData.competition.startedAt)}
             endedAt={new Date(selectedCompetitionData.competition.endedAt)}
           />
           <ScoreTable
-            reports={selectedCompetitionData.reports}
-            teams={selectedCompetitionData.teams}
+            reports={selectedCompetitionData.reports ?? []}
+            teams={selectedCompetitionData.teams ?? []}
           />
         </>
       )}
