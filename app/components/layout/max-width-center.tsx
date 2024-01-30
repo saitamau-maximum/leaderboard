@@ -1,8 +1,11 @@
 import clsx from "clsx";
+
 import styles from "./max-width-center.module.css";
 
+import type { ReactNode } from "react";
+
 interface MaxWidthCenterLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
   size?: "sm" | "md" | "lg";
 }
 

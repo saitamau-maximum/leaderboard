@@ -1,7 +1,8 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { eq } from "drizzle-orm";
+
 import { client } from "~/db/client.server";
 import { competitions, reports, teams } from "~/db/schema";
-import { eq } from "drizzle-orm";
 
 export const loader = async ({
   context,

@@ -1,4 +1,5 @@
 import { Timeline } from "@saitamau-maximum/ui";
+
 import styles from "./timelineDisplay.module.css";
 
 interface TimelineDisplayProps {

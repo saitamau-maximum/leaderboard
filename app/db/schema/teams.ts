@@ -9,5 +9,5 @@ export const teams = sqliteTable(
   },
   (teams) => ({
     teamUnique: unique().on(teams.name, teams.competitionId),
-  })
+  }),
 );

@@ -1,7 +1,8 @@
 import { Link, useLocation } from "@remix-run/react";
 import { Button, Header } from "@saitamau-maximum/ui";
+import React, { useMemo, useState } from "react";
 import { Menu } from "react-feather";
-import { useMemo, useState } from "react";
+
 import styles from "./header.module.css";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -35,7 +36,7 @@ export default function _Header() {
         ...navigation,
         active: location.pathname === navigation.href,
       })),
-    [location.pathname]
+    [location.pathname],
   );
 
   return (

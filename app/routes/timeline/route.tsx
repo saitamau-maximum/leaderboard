@@ -3,14 +3,16 @@ import {
   type MetaFunction,
   type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
+import { useLoaderData } from "@remix-run/react";
+import { eq } from "drizzle-orm";
+
 import { MaxWidthCenterLayout } from "~/components/layout/max-width-center";
 import { SITE_TITLE } from "~/constants/config";
-import { useLoaderData } from "@remix-run/react";
 import { client } from "~/db/client.server";
 import { competitions, reports, teams } from "~/db/schema";
-import { eq } from "drizzle-orm";
-import { TimelineDisplay } from "./timelineDisplay";
+
 import { Hero } from "./hero";
+import { TimelineDisplay } from "./timelineDisplay";
 
 export const meta: MetaFunction = () => {
   return [{ title: `Timeline | ${SITE_TITLE}` }];
@@ -28,7 +30,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
     .all();
 
   const latestCompetition = allCompetitions.sort(
-    (a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()
+    (a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime(),
   )[0];
 
   if (!latestCompetition) {

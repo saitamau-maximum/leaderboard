@@ -1,7 +1,9 @@
 import { Link } from "@remix-run/react";
-import type { ComponentProps } from "react";
 import { clsx } from "clsx";
+
 import styles from "./anchor.module.css";
+
+import type { ComponentProps } from "react";
 
 type Props = ComponentProps<typeof Link>;
 

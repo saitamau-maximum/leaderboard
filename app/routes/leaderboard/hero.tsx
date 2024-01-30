@@ -1,8 +1,11 @@
-import { formatDateTime } from "~/utils/datetime";
-import styles from "./hero.module.css";
-import { ArrowRight } from "react-feather";
 import clsx from "clsx";
-import { SelectBox } from "@saitamau-maximum/ui";
+import { ArrowRight } from "react-feather";
+
+import { formatDateTime } from "~/utils/datetime";
+
+import styles from "./hero.module.css";
+
+import type { ReactNode } from "react";
 
 interface HeroProps {
   competition: {
@@ -12,7 +15,7 @@ interface HeroProps {
   } | null;
 }
 
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
+const Wrapper = ({ children }: { children: ReactNode }) => (
   <section className={styles.hero}>{children}</section>
 );
 
@@ -55,7 +58,7 @@ export const Hero = ({ competition }: HeroProps) => {
                 styles.dot,
                 competitionState === "before" && styles.before,
                 competitionState === "during" && styles.during,
-                competitionState === "after" && styles.after
+                competitionState === "after" && styles.after,
               )}
             />
             {competitionState === "before" && "開催前"}

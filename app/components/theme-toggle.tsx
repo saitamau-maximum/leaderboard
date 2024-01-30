@@ -1,6 +1,7 @@
-import { Sun, Moon } from "react-feather";
-import styles from "./theme-toggle.module.css";
 import clsx from "clsx";
+import { Sun, Moon } from "react-feather";
+
+import styles from "./theme-toggle.module.css";
 
 const judgeTheme = () => {
   if (typeof window === "undefined") return "light";

@@ -1,9 +1,10 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { eq } from "drizzle-orm";
+import { boolean, number, object, safeParse } from "valibot";
+
 import { client } from "~/db/client.server";
 import { competitions, reports } from "~/db/schema";
 import { verifyToken } from "~/utils/token";
-import { boolean, number, object, safeParse } from "valibot";
-import { eq } from "drizzle-orm";
 
 const schema = object({
   pass: boolean(),

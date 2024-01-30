@@ -1,4 +1,3 @@
-import type { LinksFunction } from "@remix-run/cloudflare";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import {
   Links,
@@ -10,13 +9,16 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
+
+import Header from "./components/header";
 import {
   OGP_URL,
   SITE_DESCRIPTION,
   SITE_TITLE,
   TWITTER_ID,
 } from "./constants/config";
-import Header from "./components/header";
+
+import type { LinksFunction } from "@remix-run/cloudflare";
 import "~/style/global.css";
 import "@saitamau-maximum/ui/style.css";
 

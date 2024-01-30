@@ -1,6 +1,7 @@
-import { SITE_TITLE, TWITTER_ID } from "~/constants/config";
-import styles from "./hero.module.css";
 import { Anchor } from "~/components/ui/anchor";
+import { SITE_TITLE, TWITTER_ID } from "~/constants/config";
+
+import styles from "./hero.module.css";
 
 export const Hero = () => {
   return (

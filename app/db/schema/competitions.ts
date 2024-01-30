@@ -16,7 +16,7 @@ export const competitions = sqliteTable(
   },
   (competitions) => ({
     verificationCodeIdx: uniqueIndex("verificationCodeIdx").on(
-      competitions.verificationCode
+      competitions.verificationCode,
     ),
-  })
+  }),
 );

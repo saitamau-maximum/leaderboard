@@ -1,7 +1,5 @@
 import * as Recharts from "recharts";
 
-import styles from "./scoreTable.module.css";
-
 interface TimeSeriesChartProps {
   reports: {
     id: number;
@@ -81,7 +79,7 @@ export const TimeSeriesChart = ({
           .filter(
             (report) =>
               report.teamId === team.id &&
-              getChunkEndTime(new Date(report.submittedAt)).getTime() <= i
+              getChunkEndTime(new Date(report.submittedAt)).getTime() <= i,
           )
           .slice(-1)[0]?.score ?? 0;
 

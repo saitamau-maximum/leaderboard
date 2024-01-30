@@ -1,5 +1,6 @@
-import styles from "./competitionSelector.module.css";
 import { SelectBox } from "@saitamau-maximum/ui";
+
+import styles from "./competitionSelector.module.css";
 
 interface CompetitionSelectorProps {
   allCompetitions: {

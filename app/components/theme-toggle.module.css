@@ -28,7 +28,9 @@
   inset: var(--theme-toggle-icon-padding);
   width: var(--theme-toggle-icon-size);
   height: var(--theme-toggle-icon-size);
-  transition: stroke 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  transition:
+    stroke 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
 }
 
 .darkOnly {

@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+
 import styles from "./scoreTable.module.css";
 
 interface ScoreTableProps {
@@ -63,7 +64,7 @@ export const ScoreTable = ({ reports, teams }: ScoreTableProps) => {
                       styles.medal,
                       i === 0 && styles.gold,
                       i === 1 && styles.silver,
-                      i === 2 && styles.bronze
+                      i === 2 && styles.bronze,
                     )}
                   />
                   {i + 1}

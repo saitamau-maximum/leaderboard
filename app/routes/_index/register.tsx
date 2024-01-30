@@ -1,5 +1,6 @@
 import { Form } from "@remix-run/react";
 import { Button, Input } from "@saitamau-maximum/ui";
+
 import styles from "./register.module.css";
 
 interface RegisterProps {

@@ -1,13 +1,17 @@
-import { json, LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
+import { useActionData } from "@remix-run/react";
+import { eq } from "drizzle-orm";
+
 import { MaxWidthCenterLayout } from "~/components/layout/max-width-center";
-import { Register } from "./register";
-import { Hero } from "./hero";
-import { Description } from "./description";
 import { client } from "~/db/client.server";
 import { competitions, teams } from "~/db/schema";
-import { eq } from "drizzle-orm";
 import { generateToken } from "~/utils/token";
-import { useActionData } from "@remix-run/react";
+
+import { Description } from "./description";
+import { Hero } from "./hero";
+import { Register } from "./register";
+
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 
 export const action = async ({ context, request }: LoaderFunctionArgs) => {
   const body = await request.formData();
@@ -26,7 +30,7 @@ export const action = async ({ context, request }: LoaderFunctionArgs) => {
       },
       {
         status: 400,
-      }
+      },
     );
   }
 
@@ -43,7 +47,7 @@ export const action = async ({ context, request }: LoaderFunctionArgs) => {
       },
       {
         status: 400,
-      }
+      },
     );
   }
 
@@ -65,7 +69,7 @@ export const action = async ({ context, request }: LoaderFunctionArgs) => {
       },
       {
         status: 400,
-      }
+      },
     );
   }
 
@@ -82,7 +86,7 @@ export const action = async ({ context, request }: LoaderFunctionArgs) => {
     },
     {
       status: 200,
-    }
+    },
   );
 };
 

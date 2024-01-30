@@ -1,10 +1,9 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { client } from "~/db/client.server";
-import { competitions, teams } from "~/db/schema";
-import { eq } from "drizzle-orm";
-import { generateToken } from "~/utils/token";
-import { boolean, object, safeParse, string } from "valibot";
 import { uuid } from "@cfworker/uuid";
+import { json, type LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { object, safeParse, string } from "valibot";
+
+import { client } from "~/db/client.server";
+import { competitions } from "~/db/schema";
 
 const schema = object({
   name: string(),
@@ -32,7 +31,7 @@ export const action = async ({ context, request }: LoaderFunctionArgs) => {
   if (dateStartedAt > dateEndedAt) {
     return json(
       { error: "開始日時が終了日時よりも後になっています" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   if (isNaN(dateStartedAt.getTime()) || isNaN(dateEndedAt.getTime())) {
