@@ -33,7 +33,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
     .all();
 
   const latestCompetition = allCompetitions.sort(
-    (a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime(),
+    (a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()
   )[0];
 
   if (!latestCompetition) {
@@ -71,7 +71,7 @@ export default function LeaderboardPage() {
     useLoaderData<typeof loader>();
   const revalidator = useRevalidator();
   const [selectedCompetitionId, setSelectedCompetitionId] = useState(
-    competition?.id,
+    competition?.id
   );
   const [selectedCompetitionData, setSelectedCompetition] = useState({
     competition,
@@ -84,18 +84,18 @@ export default function LeaderboardPage() {
       () => {
         revalidator.revalidate();
       },
-      1000 * 60 * 5,
+      1000 * 60 * 5
     );
   }, []);
 
   const fetchCompetitionById = useCallback(
     async (id: number) => {
       const competitionData = await fetch(`/api/competition/${id}`).then(
-        (res) => res.json(),
+        (res) => res.json()
       );
       setSelectedCompetition(competitionData as any);
     },
-    [setSelectedCompetitionId],
+    [setSelectedCompetitionId]
   );
 
   const handleSelectedCompetitionIdChange = useCallback(
@@ -103,7 +103,7 @@ export default function LeaderboardPage() {
       setSelectedCompetitionId(id);
       fetchCompetitionById(id);
     },
-    [setSelectedCompetitionId],
+    [setSelectedCompetitionId]
   );
 
   return (
