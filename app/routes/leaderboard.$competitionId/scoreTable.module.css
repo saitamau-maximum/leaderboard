@@ -1,0 +1,62 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.table thead th {
+  text-align: left;
+  padding: 0.5rem;
+}
+
+:global(.light) .table thead th {
+  border-bottom: 1px solid var(--color-gray-300);
+}
+
+:global(.dark) .table thead th {
+  border-bottom: 1px solid var(--color-gray-700);
+}
+
+.table tbody td {
+  padding: 0.5rem;
+}
+
+:global(.light) .table tbody td {
+  border-bottom: 1px solid var(--color-gray-300);
+}
+
+:global(.dark) .table tbody td {
+  border-bottom: 1px solid var(--color-gray-700);
+}
+
+.rank {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.medal {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-block;
+  text-align: center;
+  border-radius: 50%;
+  color: inherit;
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.gold {
+  background-color: gold;
+  color: var(--color-gray-50) !important;
+}
+
+.silver {
+  background-color: silver;
+  color: var(--color-gray-900) !important;
+}
+
+.bronze {
+  background-color: #cd7f32;
+  color: var(--color-gray-50) !important;
+}
