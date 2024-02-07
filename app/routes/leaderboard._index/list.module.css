@@ -1,0 +1,15 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem 0;
+  gap: 2rem;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.title {
+  margin: 0;
+}
