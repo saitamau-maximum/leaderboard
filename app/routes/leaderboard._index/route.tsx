@@ -108,11 +108,13 @@ export default function LeaderboardPage() {
 
   return (
     <MaxWidthCenterLayout>
-      <CompetitionSelector
-        allCompetitions={allCompetitions ?? []}
-        selectedCompetitionId={selectedCompetitionId}
-        onSelectedCompetitionIdChange={handleSelectedCompetitionIdChange}
-      />
+      {allCompetitions?.length && (
+        <CompetitionSelector
+          allCompetitions={allCompetitions ?? []}
+          selectedCompetitionId={selectedCompetitionId}
+          onSelectedCompetitionIdChange={handleSelectedCompetitionIdChange}
+        />
+      )}
       <Hero competition={selectedCompetitionData.competition} />
       {selectedCompetitionData.competition && (
         <>
