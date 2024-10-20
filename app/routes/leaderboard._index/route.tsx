@@ -3,19 +3,16 @@ import {
   type MetaFunction,
   type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
-import { useLoaderData, useRevalidator } from "@remix-run/react";
-import { eq } from "drizzle-orm";
-import { useCallback, useEffect, useState } from "react";
+import { useLoaderData } from "@remix-run/react";
+import { useMemo } from "react";
 
 import { MaxWidthCenterLayout } from "~/components/layout/max-width-center";
 import { SITE_TITLE } from "~/constants/config";
 import { client } from "~/db/client.server";
-import { competitions, reports, teams } from "~/db/schema";
+import { competitions } from "~/db/schema";
 
-import { TimeSeriesChart } from "./chart";
-import { CompetitionSelector } from "./competitionSelector";
-import { Hero } from "./hero";
-import { ScoreTable } from "./scoreTable";
+import { CompetitionList } from "./competitionList";
+import styles from "./page.module.css";
 
 export const meta: MetaFunction = () => {
   return [{ title: `Leaderboard | ${SITE_TITLE}` }];
@@ -32,103 +29,71 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
     .from(competitions)
     .all();
 
-  const latestCompetition = allCompetitions.sort(
-    (a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()
-  )[0];
-
-  if (!latestCompetition) {
-    return json({
-      allCompetitions: null,
-      competition: null,
-      reports: null,
-      teams: null,
-    });
-  }
-
-  const competitionReports = await client(context.env.DB)
-    .select()
-    .from(reports)
-    .where(eq(reports.competitionId, latestCompetition.id));
-
-  const competitionTeams = await client(context.env.DB)
-    .select()
-    .from(teams)
-    .where(eq(teams.competitionId, latestCompetition.id));
-
   return json({
     allCompetitions: allCompetitions.map((c) => ({
       id: c.id,
       name: c.name,
+      startedAt: c.startedAt,
+      endedAt: c.endedAt,
     })),
-    competition: latestCompetition,
-    reports: competitionReports,
-    teams: competitionTeams,
   });
 };
 
 export default function LeaderboardPage() {
-  const { allCompetitions, competition, reports, teams } =
-    useLoaderData<typeof loader>();
-  const revalidator = useRevalidator();
-  const [selectedCompetitionId, setSelectedCompetitionId] = useState(
-    competition?.id
-  );
-  const [selectedCompetitionData, setSelectedCompetition] = useState({
-    competition,
-    reports,
-    teams,
-  });
+  const { allCompetitions } = useLoaderData<typeof loader>();
+  const now = new Date();
 
-  useEffect(() => {
-    setInterval(
-      () => {
-        revalidator.revalidate();
-      },
-      1000 * 60 * 5
-    );
-  }, []);
+  const currentCompetitions = useMemo(() => {
+    return allCompetitions.filter((c) => {
+      const startedAt = new Date(c.startedAt);
+      const endedAt = new Date(c.endedAt);
 
-  const fetchCompetitionById = useCallback(
-    async (id: number) => {
-      const competitionData = await fetch(`/api/competition/${id}`).then(
-        (res) => res.json()
+      return (
+        startedAt.getTime() < now.getTime() && now.getTime() < endedAt.getTime()
       );
-      setSelectedCompetition(competitionData as any);
-    },
-    [setSelectedCompetitionId]
-  );
+    });
+  }, [allCompetitions]);
 
-  const handleSelectedCompetitionIdChange = useCallback(
-    (id: number) => {
-      setSelectedCompetitionId(id);
-      fetchCompetitionById(id);
-    },
-    [setSelectedCompetitionId]
-  );
+  const pastCompetitions = useMemo(() => {
+    return allCompetitions.filter((c) => {
+      const endedAt = new Date(c.endedAt);
+
+      return endedAt.getTime() < now.getTime();
+    });
+  }, [allCompetitions]);
+
+  const futureCompetitions = useMemo(() => {
+    return allCompetitions.filter((c) => {
+      const startedAt = new Date(c.startedAt);
+
+      return now.getTime() < startedAt.getTime();
+    });
+  }, [allCompetitions]);
 
   return (
     <MaxWidthCenterLayout>
-      {allCompetitions?.length && (
-        <CompetitionSelector
-          allCompetitions={allCompetitions ?? []}
-          selectedCompetitionId={selectedCompetitionId}
-          onSelectedCompetitionIdChange={handleSelectedCompetitionIdChange}
-        />
-      )}
-      <Hero competition={selectedCompetitionData.competition} />
-      {selectedCompetitionData.competition && (
+      <h1 className={styles.title}>大会一覧</h1>
+      {currentCompetitions.length > 0 && (
         <>
-          <TimeSeriesChart
-            reports={selectedCompetitionData.reports ?? []}
-            teams={selectedCompetitionData.teams ?? []}
-            startedAt={new Date(selectedCompetitionData.competition.startedAt)}
-            endedAt={new Date(selectedCompetitionData.competition.endedAt)}
-          />
-          <ScoreTable
-            reports={selectedCompetitionData.reports ?? []}
-            teams={selectedCompetitionData.teams ?? []}
-          />
+          <h2 className={styles.subtitle}>現在開催中の大会</h2>
+          <CompetitionList competitions={currentCompetitions} />
         </>
+      )}
+
+      {futureCompetitions.length > 0 && (
+        <>
+          <h2 className={styles.subtitle}>今後の大会</h2>
+          <CompetitionList competitions={futureCompetitions} />
+        </>
+      )}
+
+      {pastCompetitions.length ? (
+        <>
+          <h2 className={styles.subtitle}>過去の大会</h2>
+          <CompetitionList competitions={pastCompetitions} />
+        </>
+      ) : (
+        <h2 className={styles.subtitle}>過去の大会はありません</h2>
       )}
     </MaxWidthCenterLayout>
   );
